@@ -1,10 +1,11 @@
 package com.adyabukihari.myapplication.ui
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.SearchView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.adyabukihari.myapplication.R
 import com.adyabukihari.myapplication.data.callback.GetNewsCallback
@@ -12,8 +13,8 @@ import com.adyabukihari.myapplication.data.callback.ViewHelper
 import com.adyabukihari.myapplication.data.model.ArticleResponseModel
 import com.adyabukihari.myapplication.ui.adapter.NewsAdapter
 import com.adyabukihari.myapplication.utils.Const
-import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.activity_news_list.*
+
 
 class NewsListActivity : AppCompatActivity(), ViewHelper {
 
@@ -23,6 +24,7 @@ class NewsListActivity : AppCompatActivity(), ViewHelper {
     private val mData = DataImpl(this@NewsListActivity)
     private lateinit var itemList: MutableList<ArticleResponseModel>
     private lateinit var adapter: NewsAdapter
+    private var query: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,6 +57,8 @@ class NewsListActivity : AppCompatActivity(), ViewHelper {
                 adapter.notifyDataSetChanged()
                 recyclerNews.layoutManager = layoutManager
                 recyclerNews.adapter = adapter
+                filterNews()
+                adapter.notifyDataSetChanged()
             }
 
             override fun onError(message: String) {
@@ -64,9 +68,23 @@ class NewsListActivity : AppCompatActivity(), ViewHelper {
         })
     }
 
+    // Init Filtering News //
+
+    fun filterNews(){
+        SearchBox.setOnQueryTextListener(object: SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                return false
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                adapter.filter.filter(newText)
+                return false
+            }
+        })
+    }
+
     private fun onItemClicked(article: ArticleResponseModel){
         // Send User To InAppBrowser With URL in Articles
-
         val intent = Intent(this, BrowserActivity::class.java)
         intent.putExtra("url", article.url)
         startActivity(intent)

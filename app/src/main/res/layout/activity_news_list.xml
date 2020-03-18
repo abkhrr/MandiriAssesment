@@ -21,9 +21,23 @@
         android:background="@color/divider"
         android:layout_below="@+id/appbarNews"/>
 
+    <SearchView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_10sdp"
+        android:padding="@dimen/_5sdp"
+        android:id="@+id/SearchBox"
+        android:hint="Search Something"
+        android:layout_below="@+id/appBarDivider"
+        android:singleLine="true">
+
+
+        <requestFocus/>
+    </SearchView>
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerNews"
-        android:layout_below="@+id/appBarDivider"
+        android:layout_below="@+id/SearchBox"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:padding="@dimen/_15sdp"/>
